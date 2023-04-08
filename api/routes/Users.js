@@ -31,7 +31,7 @@ router.post("/sendotp", (req, res, next) => {
             }
         });
 });
-router.post("/signup",(req, res, next) => {
+router.post("/signup", (req, res, next) => {
     Users.find({ email: req.body.email }).exec()
         .then(docs => {
             if (docs.length > 0) {
@@ -73,7 +73,7 @@ router.post("/signup",(req, res, next) => {
 
 });
 
-router.post("/login",(req, res, next) => {
+router.post("/login", (req, res, next) => {
     Users.find({ email: req.body.email }).exec()
         .then(docs => {
             if (docs.length < 1) {
@@ -107,6 +107,23 @@ router.post("/login",(req, res, next) => {
 
 });
 
+router.post("/:userID/score/:score", (req, res, next) => {
+    var userID = req.params.userID;
+    var score = req.params.score;
+    Users.findByIdAndUpdate(userID, { $inc: { score: score } }, { new: true }).exec()
+        .then(docs => {
+            res.status(201).json({
+                message: "Score Updated",
+                docs: docs
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
+});
+
 router.get("/", (req, res, next) => {
     Users.find().select("_id email").exec()
         .then(docs => {
@@ -128,7 +145,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:userID", (req, res, next) => {
-    Users.findById(req.params.userID).select("_id email").exec()
+    Users.findById(req.params.userID).select("_id email score").exec()
         .then(doc => {
             if (doc) {
                 res.status(200).json({
@@ -161,8 +178,8 @@ router.patch("/:userID", (req, res, next) => {
             res.status(200).json({
                 message: "User Details Updated",
                 user: {
-                    email : doc.email,
-                    _id : doc._id
+                    email: doc.email,
+                    _id: doc._id
                 }
             });
         })

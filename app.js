@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const userRoutes = require('./api/routes/Users');
+const predictRoutes = require('./api/routes/Predict');
 
 const app = express();
 app.use(morgan('dev'));
@@ -29,6 +30,8 @@ app.use((req,res,next)=>{
 mongoose.connect("mongodb+srv://sanjaynithin2002:" +process.env.MONGODB_PASSWORD +  "@cluster0.kgz6ota.mongodb.net/?retryWrites=true&w=majority");
 
 app.use('/users', userRoutes);
+app.use('/predict', predictRoutes);
+
 app.use((req,res,next)=>{
     const error = new Error("Not Found");
     error.status = 404;
