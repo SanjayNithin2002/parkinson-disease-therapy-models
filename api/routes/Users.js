@@ -189,6 +189,22 @@ router.patch("/:userID", (req, res, next) => {
             });
         });
 });
+
+router.patch("/:userID/:sampleID", (req, res, next) => {
+    Users.findByIdAndUpdate(req.params.userID, { "$push" : { "completed": req.params.sampleID } }, {new : true}).exec()
+        .then(docs => {
+            res.status(201).json({
+                docs: docs
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
+
+});
+
 router.delete("/:userID", (req, res, next) => {
     Users.findByIdAndDelete(req.params.userID).exec()
         .then(doc => {

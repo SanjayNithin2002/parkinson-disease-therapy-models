@@ -1,7 +1,6 @@
 var express = require('express');
 var multer = require('multer');
 var PythonShell = require('python-shell').PythonShell;
-var clearDirectory = require('../middleware/clearDirectory');
 var router = express.Router();
 
 const storage = multer.diskStorage({
@@ -49,12 +48,5 @@ router.post("/", upload.single('predictImage'), (req, res, next) => {
         })
     });
 });
-
-router.post("/clear", (req, res, next) => {
-    clearDirectory('./uploads/');
-    res.status(201).json({
-        message: "Uploads Directory Cleared"
-    })
-})
 
 module.exports = router;

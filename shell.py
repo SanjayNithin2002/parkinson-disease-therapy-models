@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pickle
 import sys
-model = pickle.load(open('finalized_model.sav', 'rb')) 
+model = pickle.load(open('model/finalized_model.sav', 'rb')) 
 #testing 
 img = cv2.imread(sys.argv[1], cv2.IMREAD_GRAYSCALE)
 img = cv2.resize(img, (28, 28))
