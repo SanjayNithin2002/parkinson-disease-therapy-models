@@ -1,6 +1,6 @@
 var express = require('express');
+var Tesseract = require('tesseract.js');
 var multer = require('multer');
-var PythonShell = require('python-shell').PythonShell;
 var router = express.Router();
 
 const storage = multer.diskStorage({
@@ -34,13 +34,13 @@ const upload = multer({
 
 router.post("/", upload.single('predictImage'), (req, res, next) => {
     var filepath = req.file.path;
-    let options = {
-        args: [filepath]
-    };
-    PythonShell.run('shell.py', options).then(messages => {
+    Tesseract.recognize(
+        filepath,
+        'eng'
+    ).then(({ data: { text } }) => {
         res.status(200).json({
-            predictedClass: messages[2]
-        });
+            "predictedClass" : text.substring(0, text.length - 1)
+        })
     })
     .catch(err => {
         res.status(500).json({

@@ -16,9 +16,7 @@ const userSchema = mongoose.Schema({
         default: 0
     },
     completed: {
-        type: [{
-            _id: mongoose.SchemaTypes.ObjectId
-        }],
+        type: [mongoose.SchemaTypes.ObjectId],
         ref: 'Samples',
         default : []
     }
