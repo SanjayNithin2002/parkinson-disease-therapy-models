@@ -16,8 +16,8 @@ router.post("/sendotp", (req, res, next) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: "noman19102002@gmail.com",
-            pass: "fqtwwwrcfacuwequ"
+            user: process.env.NODEMAIL,
+            pass: process.env.NODEMAIL_PASSWORD
         }
     })
         .sendMail(mailOptions, function (error, info) {

@@ -28,7 +28,7 @@ app.use((req,res,next)=>{
 });
 
 
-mongoose.connect("mongodb+srv://sanjaynithin2002:sanjaynithin2002@cluster0.kgz6ota.mongodb.net/?retryWrites=true&w=majority",{
+mongoose.connect("mongodb+srv://sanjaynithin2002:" +process.env.MONGODB_PASSWORD +  "@cluster0.kgz6ota.mongodb.net/?retryWrites=true&w=majority",{
     dbName: 'park'
 });
 clearDirectory('./uploads/');
