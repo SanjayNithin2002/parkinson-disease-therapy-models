@@ -7,10 +7,11 @@ var router = express.Router();
 router.get("/:score", (req, res, next) => {
     Users.findById(req.body.userID).exec()
         .then(docs => {
-            Samples.find({ _id: { $nin: docs.completed }, score: req.params.score }).exec()
+            Samples.find({ _id: { $nin: docs.completed }, score: req.params.score }).select("_id url score value").exec()
                 .then(doc => {
                     res.status(200).json({
-                        docs: doc
+                        count : doc.length,
+                        samples : doc
                     })
                 })
                 .catch(err => {
@@ -22,10 +23,11 @@ router.get("/:score", (req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-    Samples.find().exec()
+    Samples.find().select("_id url score value").exec()
         .then(docs => {
             res.status(200).json({
-                docs: docs
+                count : docs.length,
+                samples : docs
             })
         })
         .catch(err => {

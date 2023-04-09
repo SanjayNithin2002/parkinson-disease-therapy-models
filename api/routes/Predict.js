@@ -39,7 +39,7 @@ router.post("/", upload.single('predictImage'), (req, res, next) => {
         'eng'
     ).then(({ data: { text } }) => {
         res.status(200).json({
-            "predictedClass" : text.substring(0, text.length - 1)
+            "predictedClass" : text.replace(/\n/g, "")
         })
     })
     .catch(err => {

@@ -113,8 +113,7 @@ router.post("/:userID/score/:score", (req, res, next) => {
     Users.findByIdAndUpdate(userID, { $inc: { score: score } }, { new: true }).exec()
         .then(docs => {
             res.status(201).json({
-                message: "Score Updated",
-                docs: docs
+                message: "Score Updated"
             })
         })
         .catch(err => {
@@ -125,7 +124,7 @@ router.post("/:userID/score/:score", (req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-    Users.find().select("_id email").exec()
+    Users.find().select("_id email score completed").exec()
         .then(docs => {
             res.status(200).json({
                 count: docs.length,
@@ -133,6 +132,8 @@ router.get("/", (req, res, next) => {
                     return {
                         _id: doc._id,
                         email: doc.email,
+                        score : doc.score,
+                        completed : doc.completed,
                         request: {
                             type: "GET",
                             description: "Get information about induvidual user",
@@ -145,7 +146,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:userID", (req, res, next) => {
-    Users.findById(req.params.userID).select("_id email score").exec()
+    Users.findById(req.params.userID).select("_id email score completed").exec()
         .then(doc => {
             if (doc) {
                 res.status(200).json({
@@ -176,11 +177,7 @@ router.patch("/:userID", (req, res, next) => {
     Users.findByIdAndUpdate(req.params.userID, updateOps).exec()
         .then(doc => {
             res.status(200).json({
-                message: "User Details Updated",
-                user: {
-                    email: doc.email,
-                    _id: doc._id
-                }
+                message: "User Details Updated"
             });
         })
         .catch(err => {
@@ -194,7 +191,7 @@ router.patch("/:userID/:sampleID", (req, res, next) => {
     Users.findByIdAndUpdate(req.params.userID, { "$push" : { "completed": req.params.sampleID } }, {new : true}).exec()
         .then(docs => {
             res.status(201).json({
-                docs: docs
+                message : "Sample Added to the list"
             })
         })
         .catch(err => {
