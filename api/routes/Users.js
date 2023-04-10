@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 var Users = require('../models/Users');
+const Samples = require("../models/Samples");
 
 router.post("/sendotp", (req, res, next) => {
     const otp = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
@@ -106,21 +107,27 @@ router.post("/login", (req, res, next) => {
 
 
 });
-
-router.post("/:userID/score/:score", (req, res, next) => {
-    var userID = req.params.userID;
-    var score = req.params.score;
-    Users.findByIdAndUpdate(userID, { $inc: { score: score } }, { new: true }).exec()
-        .then(docs => {
-            res.status(201).json({
-                message: "Score Updated"
-            })
+router.post("/:userID/:sampleID", (req, res, next) => {
+    Samples.findById(req.params.sampleID).exec()
+        .then(doc => {
+            Users.findByIdAndUpdate(req.params.userID, { $inc: { score: doc.score }, $push : { "completed": req.params.sampleID } }, { new: true }).exec()
+                .then(docs => {
+                    res.status(201).json({
+                        message: "Score Updated"
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    })
+                });
         })
         .catch(err => {
             res.status(500).json({
                 error: err
             })
         });
+
 });
 
 router.get("/", (req, res, next) => {
@@ -132,8 +139,8 @@ router.get("/", (req, res, next) => {
                     return {
                         _id: doc._id,
                         email: doc.email,
-                        score : doc.score,
-                        completed : doc.completed,
+                        score: doc.score,
+                        completed: doc.completed,
                         request: {
                             type: "GET",
                             description: "Get information about induvidual user",
@@ -185,21 +192,6 @@ router.patch("/:userID", (req, res, next) => {
                 error: err
             });
         });
-});
-
-router.patch("/:userID/:sampleID", (req, res, next) => {
-    Users.findByIdAndUpdate(req.params.userID, { "$push" : { "completed": req.params.sampleID } }, {new : true}).exec()
-        .then(docs => {
-            res.status(201).json({
-                message : "Sample Added to the list"
-            })
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        });
-
 });
 
 router.delete("/:userID", (req, res, next) => {
