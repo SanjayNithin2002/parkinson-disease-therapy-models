@@ -54,7 +54,8 @@ router.post("/signup", (req, res, next) => {
                         user.save()
                             .then(docs => {
                                 res.status(201).json({
-                                    message: "User Created"
+                                    message: "User Created",
+                                    docs : docs
                                 });
                             })
                             .catch(err => {
@@ -90,7 +91,8 @@ router.post("/login", (req, res, next) => {
                     }
                     if (response) {
                         res.status(200).json({
-                            message: "Auth Successful"
+                            message: "Auth Successful",
+                            docs : docs
                         });
                     } else {
                         res.status(401).json({
@@ -107,28 +109,7 @@ router.post("/login", (req, res, next) => {
 
 
 });
-router.post("/:userID/:sampleID", (req, res, next) => {
-    Samples.findById(req.params.sampleID).exec()
-        .then(doc => {
-            Users.findByIdAndUpdate(req.params.userID, { $inc: { score: doc.score }, $push : { "completed": req.params.sampleID } }, { new: true }).exec()
-                .then(docs => {
-                    res.status(201).json({
-                        message: "Score Updated"
-                    })
-                })
-                .catch(err => {
-                    res.status(500).json({
-                        error: err
-                    })
-                });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        });
 
-});
 
 router.get("/", (req, res, next) => {
     Users.find().select("_id email score completed").exec()
