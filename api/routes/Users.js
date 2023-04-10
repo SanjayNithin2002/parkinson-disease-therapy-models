@@ -144,7 +144,7 @@ router.get("/", (req, res, next) => {
                         request: {
                             type: "GET",
                             description: "Get information about induvidual user",
-                            url: "http://localhost:3000/users/" + doc._id
+                            url: "https://parkisnons.onrender.com/users" + doc._id
                         }
                     }
                 })
@@ -160,7 +160,7 @@ router.get("/:userID", (req, res, next) => {
                     user: doc,
                     request: {
                         type: "GET",
-                        url: "http://localhost:3000/users"
+                        url: "https://parkisnons.onrender.com/users"
                     }
                 });
             } else {
