@@ -144,7 +144,7 @@ router.get("/", (req, res, next) => {
                         request: {
                             type: "GET",
                             description: "Get information about induvidual user",
-                            url: "https://parkisnons.onrender.com/users" + doc._id
+                            url: "https://parkisnons.onrender.com/users/" + doc._id
                         }
                     }
                 })
